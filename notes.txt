@@ -1,0 +1,669 @@
+Formation wild
+
+/////////////////////////
+1er exercice
+///////////////////////////
+
+$ mkdir node-typescript-101
+$ cd node-typescript-101
+$ npm init -y
+$ npm i -D ts-node-dev
+$ echo 'console.log("welcome home 🏠");' > index.ts
+$ npx ts-node-dev --respawn index.ts 
+
+Ceci permet d’initier et lancer un projet basique en Node avec Typescript
+Ouvrir un fichier texte et afficher son contenu :
+https://grafikart.fr/tutoriels/nodejs-filesystem-2083
+
+
+///////////////////////////////
+2ème exercice
+//////////////////////////////
+
+// création du dossier "projet"
+$ mkdir the-good-corner
+$ cd the-good-corner
+
+// initialisation du répertoire git
+$ git init
+
+// création du backend
+$ mkdir backend
+$ cd backend
+$ touch .gitignore
+$ echo “node_modules” >> .gitignore
+
+$ npm init
+//Ou, pour skipper les question et valider les réponses par défault
+$ npm init -y
+//installation du modules typescript dans l'environnement de développement
+// + installation de express
+$ npm install ts-node-dev express
+$ mkdir src
+$ cd src
+$ touch index.ts
+$ cd ..
+$ code .
+
+//////////////////////
+Le fichier package.json
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node-dev --respawn ./src/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ts-node-dev": "^2.0.0"
+  }
+}
+
+//////////////////////
+le fichier index.ts
+console.log("hello from typescript");
+
+On verifie que tout fonctionne :
+npm start
+
+/////////////////
+Pour rappel !!
+ts-node-dev -dependencies
+tsx --init
+tsx-node-dev
+
+/////////////////////////////
+Installation de express
+// si ce n'est pas déjà fait !!
+$ npm install express
+
+modifier index.ts
+
+import express from "express";
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
+
+// à faire également
+npm install --save @types/express
+
+/////////////////////////////////////
+Using REST Client to query the API
+/////////////////////////////////////
+
+Create http folder
+Create hello_world.http file
+Write and send request
+
+////////////////////////////
+Le routing
+///////////////////////////
+
+// dans le fichier index.ts
+import router from "./routes";
+app.use("/", router);
+
+//////////////////
+// création des routes
+mkdir routes
+cd routes
+touch index.ts
+
+///////////////////////////////
+// dans le fichier routes/index.ts
+import express from "express";
+import adsRoutes from "./ads.routes";
+
+const router = express.Router();
+
+router.use('/ads', adsRoutes);
+
+router.get('/', (req, res) => {
+    console.log('Mon index');
+    res.send('Hello');
+})
+
+export default router;
+
+////////////////////
+touch ads.routes.ts
+
+import express from "express";
+import { getAds }  from "../controllers/ads.controller";
+
+const router = express.Router();
+
+router.get("/", getAds);
+
+export default router;
+
+////////////////////
+// création des controllers
+normalement, on est dans le répertoire /routes
+mkdir ../controllers
+cd ../controllers
+touch ads.controller.ts
+
+import { Request, Response } from "express";
+
+// Afficher toutes les annonces
+const getAds = async (req: Request, res: Response) => {
+      const ads = "Hello ad";
+      res.send(ads);
+}
+
+export { getAds };
+
+////////////////////
+
+app.get("/ads", (req, res) => {
+  res.send(ads);
+});
+
+app.post("/ads", (req, res) => {
+  console.log(req.body);
+  res.send("Request received, check the backend terminal");
+});
+
+app.delete("/ad", (req, res) => {
+  ads = ads.filter((ad) => ad.id !== req.body.id);
+  res.send("The ad was deleted");
+});
+
+app.put("/ad", (req, res) => {
+  ads = ads.map((ad) => {
+    if (ad.id !== req.body.id) {
+      return ad;
+    } else {
+      return req.body.newAd;
+    }
+  });
+  res.send("The ad was updated");
+});
+
+
+
+///////////////////////////
+Indispensable pour lire les données json
+dans src/index.ts
+app.use(express.json());
+
+
+//////////////////////////////
+Le sql avec sqlite
+//////////////////////////////
+
+Dans vs code installer l'extension sqlite de alexcvzz
+Ouvrir la BDD avec CMD + SHIFT + P : SQLite: Open Database
+
+// installer sqlite3
+(ici, dans notre exemple, nous sommes dans le repertoire backend)
+npm install sqlite3
+
+/////////////////
+// fichier de la base de données
+mkdir src/db
+
+// fichier de la base de données
+touch myproject.sqlite
+
+// fichier d'initialisation de la structure de la BDD
+touch queries.sql
+
+Drop table if EXISTS categorie;
+
+CREATE TABLE categories (
+  id integer PRIMARY KEY,
+  name varchar(255) not null
+);
+
+INSERT INTO categories (name) VALUES
+('vêtement'),
+('voiture'),
+('autre');
+
+//////////////
+si l'on souhaite travailler avec typeORM, passer au chapitre correspondant
+/////////////
+
+// créer le ficher de connection
+dans /db   touch sqliteConfig.ts
+
+import sqlite3 from "sqlite3";
+import path from "path";
+
+const dbPath = path.resolve(__dirname, "good_corner.sqlite");
+
+const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) {
+        return console.error(err.message);
+    }
+    console.log('Connected to the SQLite database.');
+});
+
+export default db;
+
+
+// consolider la mise en oeuvre avec un import du fichier précédent !!!!
+Dans index.ts
+…
+import sqlite3 from 'sqlite3';
+const db = new sqlite3.Database('db.sqlite');
+…
+
+exemple de route
+app.get("/ad", (req, res) => {
+  db.all("SELECT * FROM ad", (err, rows) => {
+    res.send(rows);
+  })
+});
+
+////////////////////
+les requêtes préparées
+
+const stmt = db.prepare(
+    "insert into ad (title, description, owner) Values (?, ?, ?)"
+);
+stmt.run([
+    req.body.title,
+    req.body.description,
+    req.body.owner
+])
+
+//////////////////////////
+les differentes instructions
+
+db.run(sql [, param, ...] [, callback])
+Exécute une seule requête SQL qui ne retourne pas de données.
+Utilisée principalement pour INSERT, UPDATE, DELETE
+
+db.exec(sql [, callback])
+Exécute plusieurs requêtes SQL.
+Utilisée pour les transactions.
+
+db.all(sql [,param, ...] [, callback])
+Exécute la requête et renvoie toutes les lignes dans la callback.
+
+db.get(sql [,param, ...] [, callback])
+Idem que db.all mais ne retourne que la 1ère ligne dans la callback.
+
+/////////////////
+La méthode merise
+///////////////////
+
+- Modèle Conceptuel de données (MCD)
+  Représentation claire des données. Définition des dépendances fonctionnelles.
+
+- Modèle Logique de données (MLD)
+  Ajout des clés primaires et étrangères
+
+- Modèle Physique de données (MPD)
+  Prise en compte des spécificités du SGBD utilisé
+
+////////////
+Les relations :
+one to one
+one to many
+many to many
+
+////////////////////
+clé étrangère en sql
+school_id INT,
+FOREIGN KEY (school_id) REFERENCES school(id)
+
+////////////////
+Les jointures
+
+////////////////
+Les index
+
+//////////////
+Les transactions
+
+//////////////////////////
+POO
+/////////////////////////
+
+///////////////////////
+TypeORM
+///////////////////////
+
+////////////
+Les entities
+
+// installer typeorm
+$ npm install typeorm
+$ npm install reflect-metadata
+
+// installer ???
+
+// modifier le fichier tsconfig.json
+{
+  …,
+  "emitDecoratorMetadata": true,
+  "experimentalDecorators": true,
+  …
+}
+
+////////////////////////////
+// Définir les informations de connexion à la base de données
+// fichier src/config/db.ts
+
+// pour sqlite
+import { DataSource } from "typeorm";
+import { Student } from “./entities/student;
+import { School } from “./entities/school;
+import { Language } from “./entities/language; 
+
+export const dataSource = new DataSource({
+  type: "sqlite",
+  database: "../../wild.sqlite",
+  entities: [Student, School, Language],
+  synchronize: true,
+});
+
+// pour renseigner toutes les entités en même temps
+entities: [“src/entities/*.ts”],
+
+// pour postgres
+import { DataSource } from "typeorm";
+
+export const dataSource = new DataSource({
+    type: "postgres",
+    host: "localhost",
+    port: 5432,
+    username: "test",
+    password: "test",
+    database: "test",
+    synchronize: true,
+    logging: true,
+    entities: [Post, Category],
+});
+
+/////////////////////////////////////
+// initialiser la datasource en même temps que le serveur
+import "reflect-metadata";
+import express from 'express';
+
+…
+
+app.listen(5001, async () => {
+  await dataSource.initialize();
+  console.log('Server launch on http://localhost:5001');
+});
+
+/////////////////////////
+// définir une entité
+
+Définition d’une entité avec le décorateur @Entity
+Définition d’une colonne avec le décorateur @Column({options})
+
+Un active record est un pattern de programmation qui défini que :
+Chaque enregistrement de la base est représenté par un objet qui contient les données elles-mêmes mais aussi tous les comportements (méthodes) lié à ces données (select, insert, update, remove).
+Ceci est possible grâce à l’héritage de la classe BaseEntity.
+
+// src/entities/student.ts
+
+import { 
+  BaseEntity, 
+  Column, Entity, 
+  PrimaryGeneratedColumn 
+} from "typeorm";
+
+@Entity()
+export class Student extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ length: 100 })
+  firstname: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  birthday: Date;
+
+  @Column()
+  address: string;
+}
+
+///////////////////////
+// Création d'une instance
+La méthode save() hérite de la class BaseEntity
+
+// sur le fichier src/index.ts (plutôt dans le système de route, à corriger)
+
+app.post("/student", (req, res) => {
+  const ad = new Student();
+  ad.firstname = req.body.firstname;
+  ad.name = req.body.name;
+  ad.birthday = req.body.birthday;
+  ad.address = req.body.address;
+
+  ad.save();
+
+  res.send(ad);
+});
+
+app.put("/ad/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const st = await Student.findOneBy({ id })
+  if (st !== null) {
+    st.firstname = req.body.firstname;
+    st.name = req.body.name;
+    st.birthday = req.body.birthday;
+    st.address = req.body.address;
+    st.save();
+  }
+  res.send(st);
+});
+
+app.delete("/ad/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  await Student.delete({ id });
+  res.send('OK');
+});
+
+// ou
+app.delete("/ad/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const st = Student.findOneBy({ id });
+  if (st !== null) {
+    st.remove();
+  }
+  res.send('OK');
+});
+
+/////////////////
+La validation : class-validator
+
+import { 
+  BaseEntity, 
+  Column, Entity, 
+  PrimaryGeneratedColumn } from "typeorm";
+import { Length, Min, Max } from "class-validator";
+
+@Entity()
+export class School extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ length: 100 })
+  @Length(10, 100, {
+    message: "Entre 10 et 100 caractères"
+  })
+  city: string;
+
+  @Column()
+  @Min(10)
+  @Max(80)
+  capacity: number;
+}
+
+////////////////////
+import { validate } from “class-validator”;
+
+const student = new Student();
+student.firstname = “Marc”;
+student.name = “Dupont”;
+
+const errors = await validate(post)
+if (errors.length > 0) {
+    throw new Error(`Validation failed!`)
+} else {
+    await dataSource.manager.save(post)
+}
+
+
+///////////////////
+// recuperation des enregistrement
+
+// plusieurs
+import { LessThan, Like } from "typeorm"
+
+const students = await Student.find();
+
+const students = await Student.findBy({
+	name: “Rob”
+});
+
+const schools = await School.findBy({
+	capacity: LessThan(40)
+});
+
+const schools = await School.findBy({
+	city: Like(“%ar%”)
+});
+
+//un seul
+app.get("/ad", async (req, res) => {
+  const ads = await Student.find();
+  res.send(ads);
+});
+
+app.get("/ad/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const ad = await Ad.findOneBy({ id });
+  res.send(ad);
+});
+
+///////////////////
+//les transactions
+
+//une transaction est une fonction avec un callback
+await dataSource.transaction(async (transactionalEntityManager) => {
+  // Vos requêtes
+});
+
+
+// OU
+
+const queryRunner = dataSource.createQueryRunner();
+await queryRunner.connect();
+await queryRunner.startTransaction();
+// Vos requêtes
+await queryRunner.commitTransaction();
+await queryRunner.rollbackTransaction();
+await queryRunner.release();
+
+////////////
+// Le décorateur @Index()
+
+// Entity listener
+Possibilité d’exécuter des méthodes de la classe d’entité suivant certains évènements.
+Assignation de la date de création juste avant l’insertion.
+import { …, BeforeInsert } from "typeorm";
+import { Category } from "./category";
+
+@Entity()
+export class Ad extends BaseEntity {
+  …
+  @Column()
+  location: string;
+  
+  @ManyToOne(() => Category)
+  category: number;
+
+  @Column()
+  createdAt: Date;
+
+  @BeforeInsert()
+  updateDates() {
+      this.createdAt = new Date();
+  }
+}
+
+
+////////////
+// Les types de relations
+TypeORM gère tous les types de relations avec des décorateurs :
+@ManyToOne() : Un élève à une école.
+@OneToMany() : Une école à plusieurs élèves.
+@ManyToMany() : Une école enseigne plusieurs langages.
+@OneToOne() : Un élève a un profil.
+
+…
+
+  @ManyToOne(() => School, school => school.students)
+  school: School;
+
+
+  @OneToMany(() => Student, student => student.school)
+  students: Student[];
+
+
+  @ManyToMany(() => Language)
+  @JoinTable()
+  languages: Language[];
+
+
+  @ManyToMany(() => School, school => school.languages)
+  schools: School[];
+
+// requêtage
+const schools = await School.find({
+    relations: {
+      students: true,
+      languages: true
+    }
+  });
+  
+  // requête complexe
+  import { MoreThan } from "typeorm";
+
+await School.find({
+    select: {
+      id: true,
+      city: true,
+      address: true
+    },
+    relations: {
+      students: true,
+      languages: true
+    },
+    where: [{ capacity: MoreThan(30) }],
+    order: {
+      capacity: 'DESC'
+    },
+    skip: 10,
+    take: 5
+  });
+
+
+
+
+
