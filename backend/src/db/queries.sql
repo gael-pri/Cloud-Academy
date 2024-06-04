@@ -32,7 +32,7 @@ CREATE TABLE article (
 
 CREATE TABLE tag (
   id_tag integer PRIMARY KEY,
-  id_article integer not null,
+  article integer not null,
   name varchar(255) not null
 );
 

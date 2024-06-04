@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
+import { Article } from "./article";
   
   @Entity()
   export class Tag extends BaseEntity {
@@ -7,6 +8,9 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
   
     @Column()
     name: string;
+
+    @ManyToMany(() => Article, article => article.tag)
+    article: Article[];
 
     constructor(
       name: string = '', 

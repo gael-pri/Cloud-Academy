@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Section } from "./section";
   
   @Entity()
   export class Category extends BaseEntity {
@@ -7,6 +8,9 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
   
     @Column()
     name: string;
+
+    @OneToMany(() => Section, section => section.category)
+    section?: Promise<Section[]>;
 
     constructor(
       name: string = '', 

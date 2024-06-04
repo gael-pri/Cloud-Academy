@@ -1,4 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne } from "typeorm";
+import { Article } from "./article";
+import { Section } from "./section";
   
   @Entity()
   export class Chapter extends BaseEntity {
@@ -8,10 +10,21 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
     @Column()
     title: string;
 
+    @Column()
+    description: string;
+
+    @OneToMany(() => Article, article => article.chapter)
+    article?: Promise<Article[]>;
+
+    @ManyToOne(() => Section, section => section.chapter)
+    section?: Section[];
+
     constructor(
-      name: string = '', 
+      title: string = '', 
+      description: string = '', 
     ) {
       super();
-        this.title = name;
+        this.title = title;
+        this.description = description;
       }
 }

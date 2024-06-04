@@ -5,8 +5,10 @@ A way to pratice
 
 # Technologies
 
-- Backend
+- Backend : 
+
 Node, express, typescripte, sql, typeorm
 
-- Frontend
+- Frontend : 
+
 Node, React

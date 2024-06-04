@@ -1,4 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToMany, ManyToOne } from "typeorm";
+import { Chapter } from "./chapter";
+import { Tag } from "./tag";
   
   @Entity()
   export class Article extends BaseEntity {
@@ -6,12 +8,28 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
     id?: number;
   
     @Column()
-    name: string;
+    title: string;
+
+    @Column()
+    subtitle: string;
+
+    @Column()
+    description: string;
+
+    @ManyToOne(() => Chapter, chapter => chapter.article)
+    chapter?: Chapter[];
+
+    @ManyToMany(() => Tag, tag => tag.article)
+    tag?: Tag[];
 
     constructor(
-      name: string = '', 
+      title: string = '',
+      subtitle: string = '', 
+      description: string = '', 
     ) {
       super();
-        this.name = name;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.description = description;
       }
 }

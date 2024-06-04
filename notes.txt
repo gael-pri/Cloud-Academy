@@ -235,9 +235,22 @@ INSERT INTO categories (name) VALUES
 ('voiture'),
 ('autre');
 
-//////////////
-si l'on souhaite travailler avec typeORM, passer au chapitre correspondant
 /////////////
+// pour créer la base de donnée au lancement de npm
+dans le fichier src/index.ts
+
+import fs from "fs";
+
+const sqlContent: string = fs.readFileSync('./src/db/queries.sql', { encoding: 'utf-8'});
+
+db.exec(sqlContent, (err) => {
+    if (err) {
+      console.error("Error executing the SQL script:", err.message);
+    } else {
+      console.log("Database initialized successfully.");
+    }
+  });
+
 
 // créer le ficher de connection
 dans /db   touch sqliteConfig.ts
@@ -245,7 +258,7 @@ dans /db   touch sqliteConfig.ts
 import sqlite3 from "sqlite3";
 import path from "path";
 
-const dbPath = path.resolve(__dirname, "good_corner.sqlite");
+const dbPath = path.resolve(__dirname, "cloudAcademy.sqlite");
 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
@@ -256,6 +269,9 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 export default db;
 
+//////////////
+si l'on souhaite travailler avec typeORM, passer au chapitre correspondant
+/////////////
 
 // consolider la mise en oeuvre avec un import du fichier précédent !!!!
 Dans index.ts
@@ -348,6 +364,9 @@ Les entities
 $ npm install typeorm
 $ npm install reflect-metadata
 
+// générer le fichier tsconfig.json
+tsc --init
+
 // installer ???
 
 // modifier le fichier tsconfig.json
@@ -358,25 +377,34 @@ $ npm install reflect-metadata
   …
 }
 
+// créer le dossier 
+mkdir entities
+touch student.ts school.ts
+
 ////////////////////////////
 // Définir les informations de connexion à la base de données
-// fichier src/config/db.ts
+// fichier src/db/typeORMConfig.ts
 
 // pour sqlite
+import path from "path";
 import { DataSource } from "typeorm";
-import { Student } from “./entities/student;
-import { School } from “./entities/school;
-import { Language } from “./entities/language; 
+
+import { Category } from "./entities/category";
+import { Section } from "./entities/section";
+import { Chapter } from "./entities/chapter";
+import { Article } from "./entities/article";
+import { Tag } from "./entities/tag";
+
+const dbPath = path.resolve(__dirname, "cloudAcademy.sqlite");
 
 export const dataSource = new DataSource({
   type: "sqlite",
-  database: "../../wild.sqlite",
-  entities: [Student, School, Language],
+  database: dbPath,
+  entities: ["./entities/*.ts"],
   synchronize: true,
 });
 
-// pour renseigner toutes les entités en même temps
-entities: [“src/entities/*.ts”],
+export default dataSource;
 
 // pour postgres
 import { DataSource } from "typeorm";
@@ -393,16 +421,40 @@ export const dataSource = new DataSource({
     entities: [Post, Category],
 });
 
+// !!!!! ne jamais laisser synchronize: true en production
+
 /////////////////////////////////////
 // initialiser la datasource en même temps que le serveur
+// dans index.ts
+
+import dataSource from "./db/typeORMConfig";
 import "reflect-metadata";
-import express from 'express';
+
+// au cas où l'on initialiser des données de la base sur l'index.ts
+import { Annonces } from "./db/entities/annonces";
+import { Categories } from "./db/entities/categorie";
 
 …
 
 app.listen(5001, async () => {
   await dataSource.initialize();
   console.log('Server launch on http://localhost:5001');
+});
+
+// ou
+// app.listen(port);
+app
+    .listen(port, async () => {
+      await dataSource
+    .initialize()
+    .then(() => {
+      console.log('Server launch on http://localhost:' + port);
+    })
+    .catch((err) => {
+      console.error('Error during Data Source initialization:', err)
+    })
+     await cleanDB();
+     await initData();
 });
 
 /////////////////////////
@@ -440,6 +492,27 @@ export class Student extends BaseEntity {
   @Column()
   address: string;
 }
+
+// category.ts
+
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+  
+  @Entity()
+  export class Category extends BaseEntity {
+    @PrimaryGeneratedColumn()
+    id?: number;
+  
+    @Column()
+    name: string;
+
+    constructor(
+      name: string = '', 
+    ) {
+      super();
+        this.name = name;
+      }
+}
+
 
 ///////////////////////
 // Création d'une instance
@@ -616,7 +689,18 @@ TypeORM gère tous les types de relations avec des décorateurs :
 @ManyToMany() : Une école enseigne plusieurs langages.
 @OneToOne() : Un élève a un profil.
 
-…
+////////////////
+
+@OneToMany(() => Article, article => article.chapter)
+  article?: Promise<Article[]>;
+
+@ManyToOne(() => Section, section => section.chapter)
+  section?: Section[];
+
+@ManyToMany(() => Article, article => article.tag)
+  article?: Article[];
+
+//////////////////
 
   @ManyToOne(() => School, school => school.students)
   school: School;
