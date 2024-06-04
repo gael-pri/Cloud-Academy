@@ -1,5 +1,10 @@
 import express from "express";
 import router from "./routes";
+import fs from "fs";
+import db from "./db/sqliteConfig";
+
+import dataSource from "./db/typeORMConfig";
+import "reflect-metadata";
 
 const app = express();
 const port = process.env.PORT || 2900;
@@ -7,10 +12,28 @@ const port = process.env.PORT || 2900;
 app.use(express.json());
 app.use("/", router);
 
+const sqlContent: string = fs.readFileSync('./src/db/queries.sql', { encoding: 'utf-8'});
+
+db.exec(sqlContent, (err) => {
+    if (err) {
+      console.error("Error executing the SQL script:", err.message);
+    } else {
+      console.log("Database initialized successfully.");
+    }
+  });
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+app
+    .listen(port, async () => {
+      await dataSource
+    .initialize()
+    .then(() => {
+      console.log('Server launch on http://localhost:' + port);
+    })
+    .catch((err) => {
+      console.error('Error during Data Source initialization:', err)
+    })
 });
