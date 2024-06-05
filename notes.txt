@@ -561,6 +561,21 @@ app.delete("/ad/:id", async (req, res) => {
   res.send('OK');
 });
 
+// sur le fichier controllers/category.controller.ts
+
+import { Request, Response } from "express";
+import dataSource from "../db/typeORMConfig";
+import { Category } from "../db/entities/category";
+
+// Afficher toutes les categories
+const getCategory = async (req: Request, res: Response) => {
+      const categories: Category[] = await dataSource.manager.find(Category);
+      res.send(categories);
+}
+
+export { getCategory };
+
+
 /////////////////
 La validation : class-validator
 

@@ -4,22 +4,28 @@ import { Chapter } from "./chapter";
   
   @Entity()
   export class Section extends BaseEntity {
+
     @PrimaryGeneratedColumn()
-    id?: number;
+    id_section?: number;
   
     @Column()
     name: string;
 
-    @ManyToOne(() => Category, category => category.section)
-    category?: Promise<Category[]>;
+    // @ManyToOne(() => Category, category => category.sections, { eager: true })
+    // category?: Category[];
 
-    @OneToMany(() => Chapter, chapter => chapter.section)
-    chapter?: Promise<Chapter[]>;
+    @Column()
+    categoryId: string;
+
+    // @OneToMany(() => Chapter, chapter => chapter.section)
+    // chapters?: Promise<Chapter[]>;
 
     constructor(
       name: string = '', 
+      categoryId: string = '',
     ) {
       super();
         this.name = name;
+        this.categoryId = categoryId;
       }
 }

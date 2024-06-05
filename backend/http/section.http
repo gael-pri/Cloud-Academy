@@ -1,0 +1,2 @@
+### voir les section d'une catégorie
+GET http://localhost:2900/category/1

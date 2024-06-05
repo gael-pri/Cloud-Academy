@@ -12,7 +12,7 @@ const dbPath = path.resolve(__dirname, "cloudAcademy.sqlite");
 export const dataSource = new DataSource({
   type: "sqlite",
   database: dbPath,
-  entities: ["./entities/*.ts"],
+  entities: [Category, Section, Chapter, Article, Tag],
   synchronize: true,
 });
 

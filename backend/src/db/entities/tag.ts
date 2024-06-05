@@ -1,19 +1,19 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Article } from "./article";
   
   @Entity()
   export class Tag extends BaseEntity {
     @PrimaryGeneratedColumn()
-    id?: number;
+    id_tag?: number;
   
-    @Column()
-    name: string;
+    @Column({ nullable: true })
+    name?: string;
 
-    @ManyToMany(() => Article, article => article.tag)
-    article: Article[];
+    // @OneToMany(() => Article, article => article.tag)
+    // articles?: Promise<Article[]>
 
     constructor(
-      name: string = '', 
+      name?: string, 
     ) {
       super();
         this.name = name;

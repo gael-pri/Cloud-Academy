@@ -3,14 +3,15 @@ import { Section } from "./section";
   
   @Entity()
   export class Category extends BaseEntity {
+    
     @PrimaryGeneratedColumn()
-    id?: number;
+    id_category?: number;
   
     @Column()
     name: string;
 
-    @OneToMany(() => Section, section => section.category)
-    section?: Promise<Section[]>;
+    // @OneToMany(() => Section, section => section.category)
+    // sections?: Promise<Section[]>;
 
     constructor(
       name: string = '', 
