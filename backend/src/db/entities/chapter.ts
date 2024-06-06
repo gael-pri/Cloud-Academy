@@ -20,12 +20,12 @@ import { Section } from "./section";
     // articles?: Promise<Article[]>;
 
     @Column()
-    sectionId?: number;
+    sectionId?: string;
 
     constructor(
       title: string = '',
       description?: string,
-      sectionId?: number,
+      sectionId: string= '',
     ) {
       super();
         this.title = title;

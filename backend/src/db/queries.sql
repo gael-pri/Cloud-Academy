@@ -7,7 +7,8 @@ Drop table if EXISTS articles_tags;
 
 CREATE TABLE category (
   id_category integer PRIMARY KEY,
-  name varchar(255) not null
+  name varchar(255) not null,
+  description text
 );
 
 CREATE TABLE section (
@@ -47,10 +48,10 @@ CREATE TABLE articles_tags (
   FOREIGN KEY (tagId) REFERENCES tag (id_tag)
 );
 
-INSERT INTO category (name) VALUES
-('les languages'),
-('les outils'),
-('les services');
+INSERT INTO category (name, description) VALUES
+('les languages', 'apprendre à parler pour commencer'),
+('les outils', 'essentiel pour bien travailler'),
+('les services', 'toujours bon à prendre');
 
 INSERT INTO section (name, categoryId) VALUES
 ('html', 1),

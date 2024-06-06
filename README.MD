@@ -11,4 +11,4 @@ Node, express, typescripte, sql, typeorm
 
 - Frontend : 
 
-Node, React
+React, Next

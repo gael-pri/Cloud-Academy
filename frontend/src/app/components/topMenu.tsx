@@ -1,19 +1,15 @@
+import styles from "@/app/page.module.css";
+
 export interface TopMenuProps {
-    title: string;
-    picture: string;
-    price: number;
-    link: string;
+    name: string;
+    description: string;
+    id_category: string;
 };
-export function TopMenu({link, picture, title, price}: TopMenuProps) {
-    return <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-            >
+export function TopMenu({name, description, id_category}: TopMenuProps) {
+    return <a href={`/category/${id_category}`} className={styles.card}>
             <h2>
-                Docs <span>-&gt;</span>
+                {name} <span>-&gt;</span>
             </h2>
-            <p>Find in-depth information about Next.js features and API.</p>
+            <p>{description}</p>
             </a>
 }

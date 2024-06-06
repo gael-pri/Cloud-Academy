@@ -10,13 +10,18 @@ import { Section } from "./section";
     @Column()
     name: string;
 
+    @Column()
+    description: string;
+
     // @OneToMany(() => Section, section => section.category)
     // sections?: Promise<Section[]>;
 
     constructor(
-      name: string = '', 
+      name: string = '',
+      description: string = '',
     ) {
       super();
         this.name = name;
+        this.description = description;
       }
 }
