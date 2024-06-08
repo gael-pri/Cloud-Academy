@@ -7,6 +7,26 @@
   min-height: 100vh;
 }
 
+a.button {
+  padding: 1px 6px;
+  border: 1px outset buttonborder;
+  border-radius: 3px;
+  color: buttontext;
+  background-color: buttonface;
+  text-decoration: none;
+}
+
+.page_siteTitle {
+  display: flex;
+  justify-content: flex-start;
+  width: 90%;
+}
+.page_siteTitle a,
+.page_siteTitle h2 {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
 .description {
   display: inherit;
   justify-content: inherit;
@@ -81,8 +101,9 @@
 }
 .menuLateral {
   display: flex;
+  flex-direction: column;
   width: 25%;
-  padding: 24px 12px;
+  padding: 48px 12px 12px 24px;
 }
 .menuLateral::before {
   background: var(--secondary-glow);
@@ -108,8 +129,43 @@
   transform: translateZ(0);
 }
 
+.menuLateral h4 {
+  text-transform: capitalize;
+  font-size: 24px;
+  color: rgb(156, 44, 25);
+}
 
+.menu {
 
+  padding: 12px;
+  font-size: 12px;
+  color: rgb(119, 116, 116);
+  line-height: 22px;
+}
+
+.menu h2:hover {
+  font-size: 20px;
+  font-weight: 700;
+}
+.menu p {
+  align-items: center;
+}
+
+.button {
+  border: 1px solid rgb(224, 218, 218);
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.groupePage {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  border: 1px solid rgb(228, 223, 223);
+  border-radius: 12px;
+  padding: 24px;
+  background-color: rgb(248, 244, 244);
+}
 .center {
   display: flex;
   justify-content: center;
@@ -143,6 +199,18 @@
   transform: translateZ(0);
 }
 
+.formulaire {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 24px;
+}
+
+.listeArticles {
+  display: flex;
+  flex-flow: column wrap;
+  margin: 12px 0;
+}
 .logo {
   position: relative;
 }

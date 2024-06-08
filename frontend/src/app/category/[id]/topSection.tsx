@@ -5,9 +5,7 @@ export interface TopSectionProps {
     id_section: string;
 };
 export function TopSection({name, id_section}: TopSectionProps) {
-    return <a href={`/section/${id_section}`} className={styles.card}>
-                <h2>
-                    {name} <span>-&gt;</span>
-                </h2>
+    return <a href={`/section/${id_section}`} className={styles.menu}>
+                <h2>{name}</h2>
             </a>
 }

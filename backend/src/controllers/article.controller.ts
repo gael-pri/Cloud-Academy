@@ -1,11 +1,39 @@
 import { Request, Response } from "express";
 import dataSource from "../db/typeORMConfig";
 import { Article } from "../db/entities/article";
+import { Chapter } from "../db/entities/chapter";
 
+// Afficher les articles d'une section par chapitre
 const getArticle = async (req: Request, res: Response) => {
-
-      const ads = "Hello article";
-      res.send(ads);
+      const id: string = req.params.id;
+      const chapters: Chapter[] = await Chapter.find({
+            where: { sectionId: id }
+          });
+      res.send(chapters);
 }
 
-export { getArticle };
+// Rédiger un nouvel article
+const postArticle = async (req: Request, res: Response) => {
+      try {
+            const { title, subtitle, description, chapterId } = req.body;
+    
+            const articleRepository = dataSource.getRepository(Article);
+            const article = articleRepository.create({
+                title,
+                subtitle,
+                description,
+                chapterId
+            });
+    
+            console.log("will save ", article);
+            await articleRepository.save(article);
+            console.log("saved ", article);
+            res.send('au top');
+            } catch (e) {
+                console.error('create ad failed', e);
+                res.status(500).send('unexpected error')
+            }
+        }
+      //////////////////////
+
+export { getArticle, postArticle };
