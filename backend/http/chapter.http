@@ -1,2 +1,12 @@
-### voir les catégories
-GET http://localhost:2900/category
+### voir les chapters
+GET http://localhost:2900/chapter
+
+### ajouter une section
+POST http://localhost:2900/chapter/ecrire
+Content-Type: application/json
+
+{
+    "title": "Installer MongoDB",
+    "description": "Mon chapitre",
+    "sectionId": 5
+}

@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, ManyToMany, JoinTable } from "typeorm";
 import { Chapter } from "./chapter";
 import { Tag } from "./tag";
   
@@ -16,18 +16,20 @@ import { Tag } from "./tag";
     @Column({ nullable: true })
     description?: string;
 
-    // @ManyToOne(() => Chapter, chapter => chapter.articles)
-    // chapter?: Chapter;
+    @ManyToOne(() => Chapter, chapter => chapter.articles, { eager: true })
+    @JoinColumn({ name: "chapterId" })
+    chapter?: Chapter;
 
     @Column()
     chapterId: string;
 
-    // @ManyToOne(() => Tag, tag => tag.articles)
-    // tag?: Tag;
-
-    // @Column()
-    // tagId: string;
-
+    @ManyToMany(() => Tag, tag => tag.articles)
+    @JoinTable({
+        name: "articles_tags",
+        joinColumn: { name: "articleId", referencedColumnName: "id_article" },
+        inverseJoinColumn: { name: "tagId", referencedColumnName: "id_tag" }
+    })
+    tags?: Tag[];
 
     constructor(
       title: string = '',

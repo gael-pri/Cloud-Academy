@@ -3,6 +3,8 @@ import axios from "axios";
 import { CategoryProps, SectionProps, ChapterProps } from "@/app/functions/globalProps";
 
 export function cheminId(dossier: string, id: number) {
+  if (!isNaN(id)) {
+    let myid:number = id - 1;
     /////////////////
     // page d'accueil
     if (!dossier) {
@@ -26,11 +28,10 @@ export function cheminId(dossier: string, id: number) {
             fetchData();
             
         })
-        let myid:number = id - 1;
+        
         const title = categories.length > 0 ? categories[myid].name : "No title available";
         return title;
     }
-
     /////////////////
     // section
     if (dossier == 'section') {
@@ -48,13 +49,12 @@ export function cheminId(dossier: string, id: number) {
             fetchData();
             
         })
-        let myid:number = id - 1;
-        const title = sections.length > 0 ? sections[myid].name : "No title available";
-        return title;
+        const sectionId = sections.length > 0 ? sections[myid].name : "No id available";
+        return sectionId;
     }
         /////////////////
     // section
-    if (dossier == 'chapter') {
+    if (dossier == 'chapter' && myid) {
       const [chapters, setChapter] = useState<ChapterProps[]>([]);
         useEffect(() => {
             const fetchData = async () => {
@@ -69,8 +69,8 @@ export function cheminId(dossier: string, id: number) {
             fetchData();
             
         })
-        let myid:number = id - 1;
         const chapId = chapters.length > 0 ? chapters[myid].sectionId : "No title available";
         return chapId;
     }
+  }
 }

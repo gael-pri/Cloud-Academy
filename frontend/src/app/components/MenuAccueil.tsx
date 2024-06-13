@@ -30,7 +30,7 @@ export default function MenuAccueil() {
                 <BottomMenu
                 name={menu.name}
                 description={menu.description}
-                id_category={menu.id_category}
+                id={menu.id}
                 key={menu.name}
                 />
             ))}

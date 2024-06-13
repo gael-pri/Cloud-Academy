@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
 import { Article } from "./article";
   
   @Entity()
@@ -9,8 +9,8 @@ import { Article } from "./article";
     @Column({ nullable: true })
     name?: string;
 
-    // @OneToMany(() => Article, article => article.tag)
-    // articles?: Promise<Article[]>
+    @ManyToMany(() => Article, article => article.tags)
+    articles?: Article[];
 
     constructor(
       name?: string, 

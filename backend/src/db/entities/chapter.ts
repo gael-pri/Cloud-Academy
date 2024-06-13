@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { Article } from "./article";
 import { Section } from "./section";
   
@@ -13,15 +13,16 @@ import { Section } from "./section";
     @Column({ nullable: true })
     description?: string;
 
-    // @ManyToOne(() => Section, section => section.chapters)
-    // section?: Section[];
-
-    // @OneToMany(() => Article, article => article.chapter)
-    // articles?: Promise<Article[]>;
+    @ManyToOne(() => Section, section => section.chapters, { eager: true })
+    @JoinColumn({ name: "sectionId" })
+    section?: Section;
 
     @Column()
-    sectionId?: string;
+    sectionId: string;
 
+    @OneToMany(() => Article, article => article.chapter)
+    articles?: Article[];
+    
     constructor(
       title: string = '',
       description?: string,

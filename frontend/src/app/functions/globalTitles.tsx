@@ -3,6 +3,7 @@ import axios from "axios";
 import { CategoryProps, SectionProps, ChapterProps } from "@/app/functions/globalProps";
 
 export function chemin(dossier: string, id: number) {
+  if (!isNaN(id)) {
     /////////////////
     // page d'accueil
     if (!dossier) {
@@ -52,4 +53,5 @@ export function chemin(dossier: string, id: number) {
         const title = sections.length > 0 ? sections[myid].name : "No title available";
         return title;
     }
+  }
 }

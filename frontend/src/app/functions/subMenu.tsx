@@ -5,7 +5,8 @@ import { SectionProps, TopSection, TopChapter, ChapterProps } from "./globalProp
 import { cheminId } from "./globalId";
 
 
-export function sousMenu(dossier: string, id: string) {
+export function sousMenu(dossier: string, id: number) {
+  if (!isNaN(id)) {
     /////////////////
     // Affichage des sections
     if (dossier == 'category') {
@@ -69,6 +70,7 @@ return (
       /////////////////
     // Affichage des chapitres
     if (dossier == 'chapter') {
+      console.log("N° de chapitre: ", id);
       const [chapters, setChapter] = useState<ChapterProps[]>([]);
       let myId = cheminId(dossier, id);
 
@@ -98,6 +100,6 @@ return (
         ))}
         </>
     );
-        
+  }  
   }
 }

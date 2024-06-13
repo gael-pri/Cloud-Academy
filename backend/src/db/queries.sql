@@ -14,7 +14,7 @@ CREATE TABLE category (
 CREATE TABLE section (
   id_section integer PRIMARY KEY,
   name varchar(255) not null,
-  categoryId integer not null,
+  categoryId integer,
   FOREIGN KEY (categoryId) REFERENCES category(id_category)
 );
 

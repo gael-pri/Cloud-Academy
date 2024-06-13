@@ -1,9 +1,11 @@
 import express from "express";
-import { getSection, getSectionChapter }  from "../controllers/section.controller";
+import { sectionChapterList, sectionList, postSection, sectionUpdate }  from "../controllers/section.controller";
 
 const router = express.Router();
 
-router.get("/", getSection);
-router.get("/:id", getSectionChapter);
+router.get("/", sectionList);
+router.get("/:id", sectionChapterList);
+router.post("/ecrire", postSection);
+router.put("/update/:id", sectionUpdate);
 
 export default router;

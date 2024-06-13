@@ -1,2 +1,11 @@
 ### voir les section d'une catégorie
 GET http://localhost:2900/category/1
+
+### ajouter une section
+POST http://localhost:2900/section/ecrire
+Content-Type: application/json
+
+{
+    "name": "Installer MongoDB",
+    "categoryId": 5
+}

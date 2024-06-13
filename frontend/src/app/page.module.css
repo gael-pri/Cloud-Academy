@@ -7,6 +7,15 @@
   min-height: 100vh;
 }
 
+.button {
+  margin: 12px 0;
+}
+.button:hover {
+  margin: 12px 0;
+  cursor: pointer;
+  background-color: blanchedalmond;
+}
+
 a.button {
   padding: 1px 6px;
   border: 1px outset buttonborder;
@@ -136,7 +145,6 @@ a.button {
 }
 
 .menu {
-
   padding: 12px;
   font-size: 12px;
   color: rgb(119, 116, 116);

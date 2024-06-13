@@ -1,7 +1,7 @@
 ### ecrire un article
 POST http://localhost:2900/article/ecrire
-
 Content-Type: application/json
+
 {
     "title": "Installer MongoDB",
     "subtitle": "Doc de ref",
