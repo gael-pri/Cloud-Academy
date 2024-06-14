@@ -5,10 +5,10 @@ A way to pratice
 
 # Technologies
 
-- Backend : 
+- Backend :
 
-Node, express, typescripte, sql, typeorm
+Node, express, sqlite, typescripte, typeorm
 
-- Frontend : 
+- Frontend :
 
-React, Next
+Node , vite, typescript, react
