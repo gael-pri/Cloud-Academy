@@ -1,8 +1,16 @@
+import Homepage from "./pages/Homepage/Homepage";
+import Footer from "./components/Footer/Footer";
+import Header from "./components/Header/Header";
+import styles from "./App.module.scss";
+
 function App() {
 
   return (
-      <div>
-        <h1>Cloud Academy</h1>
+      <div className={`d-flex flex-column ${styles.appContainer}`}>
+        <Header />
+        <Homepage />
+        <Footer />
+
       </div>
   )
 }
