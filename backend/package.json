@@ -4,6 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "pm2": "NODE_ENV=production pm2 start server.ts --watch",
+    "build": "rimraf build && tsc -p tsconfig.json",
     "start": "ts-node-dev --respawn ./src/index.ts"
   },
   "author": "",
